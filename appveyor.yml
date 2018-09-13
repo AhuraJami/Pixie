@@ -1,0 +1,33 @@
+version: '{build}'
+os:
+- Visual Studio 2017
+
+build:
+  verbosity: minimal
+  parallel: true
+
+configuration:
+ - Debug
+ - Release
+
+environment:
+  matrix:
+    - compiler: msvc-15-seh
+      generator: "Visual Studio 15 2017"
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      before_build: 
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat"
+
+    - compiler: msvc-15-seh
+      generator: "Visual Studio 15 2017 Win64"
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      before_build:
+        call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars64.bat"
+
+build_script:
+  - git submodule update --init --recursive
+  - cmake --version
+  - mkdir build
+  - cd build
+  - cmake -G "%generator%" -DPIXIE_BUILD_UNIT_TESTS=ON -DPIXIE_RUN_UNIT_TESTS=ON ..
+  - cmake --build . --target ALL_BUILD --config "%configuration%"
