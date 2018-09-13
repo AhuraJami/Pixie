@@ -1,0 +1,50 @@
+sudo: false
+language: cpp
+
+matrix:
+  include:
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-8
+      env:
+        - MATRIX_EVAL="CC=gcc-8 && CXX=g++-8"
+
+    - os: linux
+      compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty-6.0
+          packages:
+            - clang-6.0
+            - g++-8
+      env:
+        - MATRIX_EVAL="CC=clang-6.0 && CXX=clang++-6.0 && CXX_FLAGS=-std=c++17 "
+        
+    - os: osx
+      osx_image: xcode9.1
+      compiler: gcc
+      before_install:
+        - brew cask uninstall oclint
+      env:
+        - MATRIX_EVAL="brew install gcc && CC=gcc-8 && CXX=g++-8"
+
+    - os: osx
+      osx_image: xcode9.1
+      compiler: clang
+
+install: 
+  - eval "${MATRIX_EVAL}"
+
+script:
+  - cmake -DPIXIE_BUILD_UNIT_TESTS=ON -DPIXIE_RUN_UNIT_TESTS=ON .
+  - cmake --build . -- -j2
+
+notifications:
+  email: false
