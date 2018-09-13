@@ -8,7 +8,7 @@ using namespace pixie;
 
 class TickableObject
 {
-public:	// @NOTE: Tick must be a public member
+public:	// @NOTE: The concepts must be public
 	void Tick(std::chrono::nanoseconds delta_time)
 	{
 		some_time = some_time + delta_time;
@@ -20,19 +20,22 @@ public:	// @NOTE: Tick must be a public member
 	std::chrono::nanoseconds some_time{0};
 };
 
+
 class Derived : TickableObject
 {
 public:
 	void Tick(std::chrono::nanoseconds delta_time)
 	{
 		TickableObject::Tick(delta_time);
-		std::cout << "Derived" << std::endl;
+		std::cout << "Derived-Tick" << std::endl;
 	}
 };
+
 
 class NonTickableObject
 {
 };
+
 
 TEST(TickableTest, TypeErasureTest)
 {
@@ -65,15 +68,17 @@ TEST(TickableTest, VerifyValueSemantic)
 	EXPECT_EQ(original_object.some_time, std::chrono::nanoseconds{0});
 };
 
-TEST(TickableTest, TickGetsCalled)
+
+TEST(TickableTest, TickDerivedAndParent)
 {
-	Tickable obj = TickableObject();
+	Tickable object = Derived();
+
 	::testing::internal::CaptureStdout();
-	Tick(obj, std::chrono::seconds{1});
+	Tick(object, std::chrono::milliseconds{1});
 	std::string output = testing::internal::GetCapturedStdout();
 
-	EXPECT_STREQ(output.c_str(), "1000ms\n");
-}
+	EXPECT_STREQ(output.c_str(), "1ms\nDerived-Tick\n");
+};
 
 
 TEST(TickableTest, OverloadCallTickForNonTickable)
@@ -81,7 +86,7 @@ TEST(TickableTest, OverloadCallTickForNonTickable)
 	Tickable obj = NonTickableObject();
 
 	::testing::internal::CaptureStderr();
-	Tick(obj, std::chrono::seconds{1});
+	EXPECT_NO_FATAL_FAILURE(Tick(obj, std::chrono::seconds{1}));
 	std::string output = testing::internal::GetCapturedStderr();
 
 	using T = NonTickableObject;
@@ -91,7 +96,7 @@ TEST(TickableTest, OverloadCallTickForNonTickable)
 		   << "If your class already implements Tick then make sure it has a public accessor.\n"
 		   << "If not, please define the member function with the following signature within your class.\n"
 		   << "Error: " << typeid(T).name()   << " Requires\t "
-		   << "'void Tick(Chrono delta_time) {}'\n"
+		   << "'void Tick(std::chrono::nanoseconds delta_time) {}'\n"
 		   << "--------------------------------------------------------------------------"
 		   << std::endl;
 
@@ -99,13 +104,3 @@ TEST(TickableTest, OverloadCallTickForNonTickable)
 }
 
 
-TEST(TickableTest, DerivedAndParentTick)
-{
-	Tickable object = Derived();
-
-	::testing::internal::CaptureStdout();
-	Tick(object, std::chrono::milliseconds{1});
-	std::string output = testing::internal::GetCapturedStdout();
-
-	EXPECT_STREQ(output.c_str(), "1ms\nDerived\n");
-};
