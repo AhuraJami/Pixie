@@ -31,12 +31,14 @@ target_include_directories(Pixie
 target_sources(Pixie
     PUBLIC
         ${PIXIE_INCLUDE_DIR}/Core/PixieExports.h
+        ${PIXIE_INCLUDE_DIR}/Core/Scene.h
         ${PIXIE_INCLUDE_DIR}/Utility/TypeTraits.h
         ${PIXIE_INCLUDE_DIR}/Concepts/Virtual/Begin.h
         ${PIXIE_INCLUDE_DIR}/Concepts/Virtual/Tick.h
         ${PIXIE_INCLUDE_DIR}/Concepts/Virtual/End.h
         ${PIXIE_INCLUDE_DIR}/Concepts/Tickable.h
-
+    PRIVATE
+        ${PIXIE_SOURCE_DIR}/Core/Scene.cpp
 )
 
 #=========================================================================================
