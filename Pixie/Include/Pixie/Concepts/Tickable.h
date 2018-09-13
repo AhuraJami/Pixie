@@ -4,10 +4,10 @@
 #include <memory>
 #include <chrono>
 
-#include "Core/PixieExports.h"
-#include "Concepts/Virtual/Tick.h"
-#include "Concepts/Virtual/Begin.h"
-#include "Concepts/Virtual/End.h"
+#include "Pixie/Core/PixieExports.h"
+#include "Pixie/Concepts/Virtual/Tick.h"
+#include "Pixie/Concepts/Virtual/Begin.h"
+#include "Pixie/Concepts/Virtual/End.h"
 
 
 namespace pixie

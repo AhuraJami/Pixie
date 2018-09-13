@@ -4,9 +4,9 @@
 #include <vector>
 #include <type_traits>
 
-#include "Core/PixieExports.h"
-#include "Concepts/Tickable.h"
-#include "Utility/TypeTraits.h"
+#include "Pixie/Core/PixieExports.h"
+#include "Pixie/Concepts/Tickable.h"
+#include "Pixie/Utility/TypeTraits.h"
 
 namespace pixie
 {

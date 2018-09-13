@@ -1,4 +1,4 @@
-#include "Core/Scene.h"
+#include "Pixie/Core/Scene.h"
 
 using namespace pixie;
 

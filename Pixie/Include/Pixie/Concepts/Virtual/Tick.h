@@ -4,8 +4,8 @@
 #include <iostream>
 #include <chrono>
 
-#include "Core/PixieExports.h"
-#include "Utility/TypeTraits.h"
+#include "Pixie/Core/PixieExports.h"
+#include "Pixie/Utility/TypeTraits.h"
 
 namespace pixie
 {

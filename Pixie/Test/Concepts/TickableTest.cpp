@@ -2,7 +2,7 @@
 #include <gtest/gtest.h>
 #include <chrono>
 
-#include "Concepts/Tickable.h"
+#include "Pixie/Concepts/Tickable.h"
 
 using namespace pixie;
 

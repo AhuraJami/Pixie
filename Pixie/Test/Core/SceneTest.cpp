@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include "Core/Scene.h"
+#include "Pixie/Core/Scene.h"
 
 using namespace pixie;
 using namespace std;

@@ -21,7 +21,7 @@ set(PIXIE_SOURCE_DIR    ${CMAKE_CURRENT_SOURCE_DIR}/Source)
 target_include_directories(Pixie
         PUBLIC
             $<INSTALL_INTERFACE:include/pixie>
-            $<BUILD_INTERFACE:${PIXIE_INCLUDE_DIR}>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Include/>
         PRIVATE
             ${PIXIE_SOURCE_DIR})
 
@@ -38,6 +38,7 @@ target_sources(Pixie
         ${PIXIE_INCLUDE_DIR}/Concepts/Virtual/End.h
         ${PIXIE_INCLUDE_DIR}/Concepts/Tickable.h
     PRIVATE
+
         ${PIXIE_SOURCE_DIR}/Core/Scene.cpp
 )
 

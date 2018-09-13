@@ -1,7 +1,7 @@
 #=========================================================================================
 # Project Setup
 #=========================================================================================
-cmake_minimum_required(VERSION 3.8 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.8.0 FATAL_ERROR)
 
 # Global project name
 project(PIXIE VERSION 0.0.1 LANGUAGES C CXX)

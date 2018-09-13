@@ -1,8 +1,8 @@
 #ifndef PIXIE_CONCEPTS_VIRTUAL_BEGIN_H
 #define PIXIE_CONCEPTS_VIRTUAL_BEGIN_H
 
-#include "Core/PixieExports.h"
-#include "Utility/TypeTraits.h"
+#include "Pixie/Core/PixieExports.h"
+#include "Pixie/Utility/TypeTraits.h"
 
 namespace pixie
 {
