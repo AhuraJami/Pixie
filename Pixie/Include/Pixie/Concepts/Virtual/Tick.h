@@ -74,7 +74,7 @@ protected:
      * @param [in] delta_time Time it takes to render a single frame/ finish one iteration
      */
 	template<class T, typename
-	std::enable_if_t<HasTick<T> == 0> * = nullptr>
+	std::enable_if<HasTick<T> == 0>::type* = nullptr>
 	static inline void CallTick(T& data, std::chrono::nanoseconds delta_time)
 	{
 		std::cerr << "Error: Object " << /*pixie::type_traits::experimental::type_name<T>()*/ typeid(T).name() << " is specified to comply with "

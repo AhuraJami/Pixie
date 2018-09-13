@@ -7,6 +7,7 @@
 #include "Core/PixieExports.h"
 #include "Concepts/Virtual/Tick.h"
 #include "Concepts/Virtual/Begin.h"
+#include "Concepts/Virtual/End.h"
 
 
 namespace pixie
@@ -14,8 +15,8 @@ namespace pixie
 
 // TODO(Ahura): Should I prohibit heap allocation of this class?
 /**
- * Type erasure class that implements polymorphic Tick concept.
- * Any object that Ticks should be type erased into this class
+ * Type erasure class that implements polymorphic Begin, Tick, and End concepts.
+ * @NOTE: Any object that Ticks should be type erased into this class
  */
 class Tickable
 {
@@ -28,6 +29,8 @@ class Tickable
 	// Allow Tick to access private member 'self'
 	template<class T> friend void Tick(T&, std::chrono::nanoseconds);
 
+	// Allow End to access private member 'self'
+	template<class T> friend void End(T&);
 public:
 	/**
 	 * (Constructor) Constructs the input object of type T in the heap and stores a unique pointer to it.
@@ -58,7 +61,7 @@ private:
 	/**
 	 * Base type erasure interface class that provides Begin and Tick concepts
 	 */
-	struct Concept : public VirtualTick, public VirtualBegin
+	struct Concept : public VirtualTick, public VirtualBegin, public VirtualEnd
 	{
 		/** Default virtual destructor */
 		~Concept() override = default;
@@ -107,6 +110,15 @@ private:
 		inline void Tick(std::chrono::nanoseconds delta_time) override
 		{
 			VirtualTick::CallTick(data, delta_time);
+		}
+
+
+		/**
+		 * Implementation of virtual End method that is called at the End of main loop
+		 */
+		inline void End() override
+		{
+			VirtualEnd::CallEnd(data);
 		}
 
 		/** Type erased object that supposedly complies with the implemented concepts */

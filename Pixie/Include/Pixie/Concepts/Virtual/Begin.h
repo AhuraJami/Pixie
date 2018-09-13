@@ -24,8 +24,8 @@ constexpr bool HasBegin = pixie::type_traits::is_detected_v<CheckBegin, T>;
  * Free Begin function that is called from the main game loop which will then redirects the call to the
  * Begin method of input object of type T
  * @tparam T (Automatically deduced) - Type of the concept object that implements the Virtual Begin concept
- * @param [in] object Concept object that implements the Virtual Begin concept and holds a reference to the actual
- * 			   		  object who implements the 'void Begin()' method
+ * @param [in] object Concept object that implements the Virtual Begin concept and holds a reference to the
+ * actual object who implements the 'void Begin()' method
  */
 template<typename T>
 PIXIE_EXPORT inline void Begin(T& object)
@@ -65,7 +65,7 @@ protected:
     /**
      * Overloaded method that is invoked when the object of type T does not have a Begin method
      * but still is defined to comply with this concept
-     * @tparam T Automatically deduced - Type of class that implements a Tick method
+     * @tparam T Automatically deduced - Type of class that implements the Begin method
      * @param [in] data Class that derives from this concept and implements a Begin method
      */
 	template<class T, typename

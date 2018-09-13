@@ -22,6 +22,11 @@ public:	// @NOTE: The concepts must be public
 		std::cout << duration << "ms" << std::endl;
 	}
 
+	void End()
+	{
+		std::cout << "End" << std::endl;
+ 	}
+
 	std::chrono::nanoseconds some_time{0};
 };
 
@@ -39,11 +44,20 @@ public:
 		TickableObject::Tick(delta_time);
 		std::cout << "Derived-Tick" << std::endl;
 	}
+
+	void End()
+	{
+		TickableObject::End();
+		std::cout << "Derived-End" << std::endl;
+	}
+
 };
+
 
 class NonTickableObject
 {
 };
+
 
 TEST(TickableTest, TypeErasureTest)
 {
@@ -100,6 +114,19 @@ TEST(TickableTest, TickDerivedAndParent)
 	EXPECT_STREQ(output.c_str(), "1ms\nDerived-Tick\n");
 };
 
+
+TEST(TickableTest, EndDerivedAndParent)
+{
+	Tickable object = Derived();
+
+	::testing::internal::CaptureStdout();
+	End(object);
+	std::string output = testing::internal::GetCapturedStdout();
+
+	EXPECT_STREQ(output.c_str(), "End\nDerived-End\n");
+};
+
+
 TEST(TickableTest, OverloadCallBeginForNonTickable)
 {
 	Tickable obj = NonTickableObject();
@@ -126,4 +153,36 @@ TEST(TickableTest, OverloadCallTickForNonTickable)
 		   << std::endl;
 
 	EXPECT_STREQ(output.c_str(), buffer.str().c_str());
+}
+
+TEST(TickableTest, OverloadCallEndForNonTickable)
+{
+	Tickable obj = NonTickableObject();
+	EXPECT_NO_FATAL_FAILURE(End(obj));
+}
+
+
+
+class OnlyTickObject
+{
+public:
+	void Tick(std::chrono::nanoseconds delta_time)
+	{
+		std::cout << "OnlyTick" << std::endl;
+	}
+};
+
+
+
+TEST(TickableTest, OnlyTickObjectTest)
+{
+	Tickable obj = OnlyTickObject();
+	EXPECT_NO_FATAL_FAILURE(Begin(obj));
+
+	::testing::internal::CaptureStdout();
+	EXPECT_NO_FATAL_FAILURE(Tick(obj, std::chrono::seconds{1}));
+	std::string output = testing::internal::GetCapturedStdout();
+	EXPECT_STREQ(output.c_str(), "OnlyTick\n");
+
+	EXPECT_NO_FATAL_FAILURE(End(obj));
 }

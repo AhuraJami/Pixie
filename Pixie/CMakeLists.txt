@@ -34,6 +34,7 @@ target_sources(Pixie
         ${PIXIE_INCLUDE_DIR}/Utility/TypeTraits.h
         ${PIXIE_INCLUDE_DIR}/Concepts/Virtual/Begin.h
         ${PIXIE_INCLUDE_DIR}/Concepts/Virtual/Tick.h
+        ${PIXIE_INCLUDE_DIR}/Concepts/Virtual/End.h
         ${PIXIE_INCLUDE_DIR}/Concepts/Tickable.h
 
 )
