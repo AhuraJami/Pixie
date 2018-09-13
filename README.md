@@ -1,5 +1,9 @@
 # Pixie 
 ###### _Under Development..._
+[![Standard](https://img.shields.io/badge/C%2B%2B-17-blue.svg)](https://isocpp.org/) 
+[![Build Status](https://travis-ci.com/AhuraJami/Pixie.svg?branch=master)](https://travis-ci.com/AhuraJami/Pixie)
+[![Build status](https://ci.appveyor.com/api/projects/status/i9na5fto26swphob/branch/master?svg=true)](https://ci.appveyor.com/project/AhuraJami/pixie/branch/master)
+
 
 Pixie is a cross-platform library that aims to provide a complete suite of development tools for building simplistic virtual environments suitable for developing and testing new and wild Reinforcement Learning algorithms.
 
