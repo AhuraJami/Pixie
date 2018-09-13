@@ -9,6 +9,11 @@ using namespace pixie;
 class TickableObject
 {
 public:	// @NOTE: The concepts must be public
+	void Begin()
+	{
+		std::cout << "Begin" << std::endl;
+	}
+
 	void Tick(std::chrono::nanoseconds delta_time)
 	{
 		some_time = some_time + delta_time;
@@ -20,10 +25,15 @@ public:	// @NOTE: The concepts must be public
 	std::chrono::nanoseconds some_time{0};
 };
 
-
 class Derived : TickableObject
 {
 public:
+	void Begin()
+	{
+		TickableObject::Begin();
+		std::cout << "Derived-Begin" << std::endl;
+	}
+
 	void Tick(std::chrono::nanoseconds delta_time)
 	{
 		TickableObject::Tick(delta_time);
@@ -31,11 +41,9 @@ public:
 	}
 };
 
-
 class NonTickableObject
 {
 };
-
 
 TEST(TickableTest, TypeErasureTest)
 {
@@ -69,6 +77,18 @@ TEST(TickableTest, VerifyValueSemantic)
 };
 
 
+TEST(TickableTest, BeginDerivedAndParent)
+{
+	Tickable object = Derived();
+
+	::testing::internal::CaptureStdout();
+	Begin(object);
+	std::string output = testing::internal::GetCapturedStdout();
+
+	EXPECT_STREQ(output.c_str(), "Begin\nDerived-Begin\n");
+};
+
+
 TEST(TickableTest, TickDerivedAndParent)
 {
 	Tickable object = Derived();
@@ -80,6 +100,11 @@ TEST(TickableTest, TickDerivedAndParent)
 	EXPECT_STREQ(output.c_str(), "1ms\nDerived-Tick\n");
 };
 
+TEST(TickableTest, OverloadCallBeginForNonTickable)
+{
+	Tickable obj = NonTickableObject();
+	EXPECT_NO_FATAL_FAILURE(Begin(obj));
+}
 
 TEST(TickableTest, OverloadCallTickForNonTickable)
 {
@@ -102,5 +127,3 @@ TEST(TickableTest, OverloadCallTickForNonTickable)
 
 	EXPECT_STREQ(output.c_str(), buffer.str().c_str());
 }
-
-
