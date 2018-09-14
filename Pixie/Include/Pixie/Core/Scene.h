@@ -25,7 +25,7 @@ namespace pixie
  * @remarks Do not modify registered objects with this class. Treat the class
  * more like a database.
  */
-class PIXIE_API Scene
+class Scene
 {
 	
 public:

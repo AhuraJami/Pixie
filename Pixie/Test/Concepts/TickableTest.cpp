@@ -59,18 +59,6 @@ class NonTickableObject
 };
 
 
-TEST(TickableTest, TypeErasureTest)
-{
-	std::vector<Tickable> objects;
-
-	objects.emplace_back(TickableObject());
-	objects.emplace_back(NonTickableObject());
-	objects.emplace_back(5);
-
-	EXPECT_EQ(objects.size(), 3);
-};
-
-
 TEST(TickableTest, VerifyValueSemantic)
 {
 	TickableObject original_object;
@@ -166,7 +154,7 @@ TEST(TickableTest, OverloadCallEndForNonTickable)
 class OnlyTickObject
 {
 public:
-	void Tick(std::chrono::nanoseconds delta_time)
+	void Tick(std::chrono::nanoseconds /*delta_time*/)
 	{
 		std::cout << "OnlyTick" << std::endl;
 	}
@@ -186,8 +174,6 @@ TEST(TickableTest, OnlyTickObjectTest)
 
 	EXPECT_NO_FATAL_FAILURE(End(obj));
 }
-
-
 
 
 

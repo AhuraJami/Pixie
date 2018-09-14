@@ -7,7 +7,7 @@
 namespace pixie
 {
 
-class PIXIE_API Engine final
+class Engine final
 {
 public:
 	/** Default constructor  */
