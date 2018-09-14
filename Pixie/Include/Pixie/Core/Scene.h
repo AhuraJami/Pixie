@@ -1,8 +1,9 @@
 #ifndef PIXIE_CORE_SCENE_H
 #define PIXIE_CORE_SCENE_H
 
+#include <memory>
 #include <vector>
-#include <type_traits>
+#include <chrono>
 
 #include "Pixie/Core/PixieExports.h"
 #include "Pixie/Concepts/Tickable.h"
@@ -11,6 +12,14 @@
 namespace pixie
 {
 
+// =============================================================================
+// Explicit DLL exports
+// =============================================================================
+// @note Uncomment if used directly by the user. To compile, Tickable will need
+// a default constructor.
+// template class PIXIE_API std::vector<Tickable, std::allocator<Tickable>>; 
+
+
 /**
  * Scene class which holds all the objects that are present in the environment
  * @remarks Do not modify registered objects with this class. Treat the class
@@ -18,16 +27,30 @@ namespace pixie
  */
 class PIXIE_API Scene
 {
+	
 public:
+	/** Default constructor */
+	Scene() = default;
+
+	/** Default destructor */
+	~Scene() = default;
+
+public: // public APIs
+	// TODO(Ahura): Is it a good idea to return a pointer
+	// and let the user store it in their class?
+	// Although convenient, it is problematic if we want to
+	// copy the object and all its dependencies.
+	// Need a system that determines dependencies such as
+	// CreateSubobject<T> and then pass its parent as an argument
+	// to register this dependency.
 	/**
-	 * Registers input object into the scene
-	 * @tparam T (Automatically deduced) Type of the object that is begin registered
-	 * @param [in] object An object that implements any of the pixie's concepts
-	 * @pre: Original object must be passed into this method, otherwise a copy of the
-	 * input object may be registered
+	 * Creates and adds an object of type T into the scene
+	 * @tparam T (Required) Type of the object that is being created and registered
+	 * @return A pointer to the created object
+	 * @note Do NOT delete the returned pointer
 	 */
 	template<class T>
-	inline void Register(const T& object);
+	inline T* CreateAndRegisterObject();
 
 	/**
 	 * Calls the Begin method of all the registered objects (if implemented)
@@ -46,18 +69,32 @@ public:
 	void EndObjects();
 
 private:
-	/** Registered objects that implement Tick concept */
+	/// Registered objects that implement Tick concept
 	std::vector<Tickable> tickables;
 };
 
-// =======================================================================================
+// =============================================================================
 // Template methods definition
-// =======================================================================================
+// =============================================================================
 template<class T>
-void Scene::Register(const T& object)
+T* Scene::CreateAndRegisterObject()
 {
-	tickables.emplace_back(object);
+	// TODO(Ahura): Causes the T to be moved at least twice
+	// and its destructor to be called twice as well.
+	// Probably should restrict the user from managing any
+	// resources in the destructor and if they do, they must
+	// implement the move constructor as well.
+	// Maybe have every class implement a Destroy method that
+	// will in turn call it's dependencies Destroy?
+	// See above TODO for SubObject registration:
+	// Keeping the dependecy chain, we can have user call a
+	// single Destroy on parent object, and in turn we destroy
+	// all its dependencies.
+	Tickable obj = T();
+	tickables.emplace_back(std::move(obj));
+	return tickables.back().StaticCast<T>();
 }
+
 
 } // namespace pixie
 

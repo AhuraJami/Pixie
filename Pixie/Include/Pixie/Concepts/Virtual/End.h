@@ -70,7 +70,7 @@ protected:
      */
 	template<class T, typename
 	std::enable_if_t<HasEnd<T> == 0> * = nullptr>
-	static inline void CallEnd(T& data)
+	static inline void CallEnd(T&)
 	{
 		// Do nothing.
 	}

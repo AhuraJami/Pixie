@@ -62,6 +62,7 @@ public:
 	 * @tparam T (Required) Type of the object that is stored here
 	 * @return On successful cast a pointer to the stored object;
 	 * otherwise undefined behavior
+	 * @note Do NOT delete this pointer
 	 * @remark Use this method only if you are certain that an object of
 	 * type T resides in this class; else use DynamicCast<T> and check
 	 * for nullptr access before unpacking the returned value
@@ -77,6 +78,7 @@ public:
 	 * @tparam T (Required) Type of the object that is stored here
 	 * @return On successful cast a pointer to the stored object;
 	 * otherwise a nullptr
+	 * @note Do NOT delete this pointer
 	 */
 	template<typename T>
 	PIXIE_EXPORT T* DynamicCast() const

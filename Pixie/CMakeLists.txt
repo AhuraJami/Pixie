@@ -31,6 +31,7 @@ target_include_directories(Pixie
 target_sources(Pixie
     PUBLIC
         ${PIXIE_INCLUDE_DIR}/Core/PixieExports.h
+        ${PIXIE_INCLUDE_DIR}/Core/Core.h
         ${PIXIE_INCLUDE_DIR}/Core/Scene.h
         ${PIXIE_INCLUDE_DIR}/Utility/TypeTraits.h
         ${PIXIE_INCLUDE_DIR}/Concepts/Virtual/Begin.h
@@ -38,7 +39,7 @@ target_sources(Pixie
         ${PIXIE_INCLUDE_DIR}/Concepts/Virtual/End.h
         ${PIXIE_INCLUDE_DIR}/Concepts/Tickable.h
     PRIVATE
-
+        ${PIXIE_SOURCE_DIR}/Core/Core.cpp
         ${PIXIE_SOURCE_DIR}/Core/Scene.cpp
 )
 
@@ -55,13 +56,13 @@ target_compile_features(Pixie
 
 # Add compile flags
 target_compile_options(Pixie
-    PRIVATE
+    PUBLIC
         # GNU (g++)
         $<$<CXX_COMPILER_ID:GNU>:$<BUILD_INTERFACE:-Wall; -Wextra; -Wpedantic>>
         # Clang
         $<$<CXX_COMPILER_ID:Clang>:$<BUILD_INTERFACE:-Wall; -Wextra; -Wpedantic>>
         # MSVC
-        $<$<CXX_COMPILER_ID:MSVC>:$<BUILD_INTERFACE:/W4>>)
+        $<$<CXX_COMPILER_ID:MSVC>:$<BUILD_INTERFACE:/W4; /permissive->>)
 
 # Set output build and output directories so that test executables end up next to dll's
 set_target_properties(Pixie PROPERTIES

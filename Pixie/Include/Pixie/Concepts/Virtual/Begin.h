@@ -70,7 +70,7 @@ protected:
      */
 	template<class T, typename
 	std::enable_if_t<HasBegin<T> == 0> * = nullptr>
-	static inline void CallBegin(T& data)
+	static inline void CallBegin(T&)
 	{
 		// Do nothing.
 	}

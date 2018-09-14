@@ -75,7 +75,7 @@ protected:
      */
 	template<class T, typename
 	std::enable_if<HasTick<T> == 0>::type* = nullptr>
-	static inline void CallTick(T& data, std::chrono::nanoseconds delta_time)
+	static inline void CallTick(T&, std::chrono::nanoseconds)
 	{
 		std::cerr << "Error: Object " << /*pixie::type_traits::experimental::type_name<T>()*/ typeid(T).name() << " is specified to comply with "
 				  << "Tick concept but does not define a 'Tick' member function.\n"

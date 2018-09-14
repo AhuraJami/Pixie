@@ -34,32 +34,9 @@ public:
 };
 
 
-TEST_F(SceneTest, RegisterObject)
-{
-	SomeObject so;
-	EXPECT_NO_THROW(scene.Register(so));
-}
-
-// TODO(Ahura): Is this a good thing? We have to see...
-TEST_F(SceneTest, RegisterAlwaysCopies)
-{
-	SomeObject so;
-	EXPECT_NO_THROW(scene.Register(so));
-
-	::testing::internal::CaptureStdout();
-	scene.BeginObjects();
-	std::string output = testing::internal::GetCapturedStdout();
-
-	EXPECT_STREQ(output.c_str(), "Begin\n");
-
-	// Verify no change in original object
-	EXPECT_EQ(so.some_number, 0);
-}
-
 TEST_F(SceneTest, VerifyMethodsGetCalled)
 {
-	SomeObject so;
-	EXPECT_NO_THROW(scene.Register(so));
+	EXPECT_NO_THROW(scene.CreateAndRegisterObject<SomeObject>());
 
 	::testing::internal::CaptureStdout();
 	scene.BeginObjects();
