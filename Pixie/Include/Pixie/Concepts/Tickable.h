@@ -57,6 +57,34 @@ public:
 	/** Move assignment operator */
 	PIXIE_EXPORT Tickable& operator=(Tickable&&) noexcept = default;
 
+	/**
+	 * Returns a pointer to the type erased object that is stored here
+	 * @tparam T (Required) Type of the object that is stored here
+	 * @return On successful cast a pointer to the stored object;
+	 * otherwise undefined behavior
+	 * @remark Use this method only if you are certain that an object of
+	 * type T resides in this class; else use DynamicCast<T> and check
+	 * for nullptr access before unpacking the returned value
+	 */
+	template<typename T>
+	PIXIE_EXPORT T* StaticCast() const
+	{
+		return &static_cast<Model<T>*>(self.get())->data;
+	}
+
+	/**
+	 * Returns a pointer to the type erased object that is stored here
+	 * @tparam T (Required) Type of the object that is stored here
+	 * @return On successful cast a pointer to the stored object;
+	 * otherwise a nullptr
+	 */
+	template<typename T>
+	PIXIE_EXPORT T* DynamicCast() const
+	{
+		auto ptr = dynamic_cast<Model<T>*>(self.get());
+		return ptr ? &ptr->data : nullptr;
+	}
+
 private:
 	/**
 	 * Base type erasure interface class that provides Begin and Tick concepts

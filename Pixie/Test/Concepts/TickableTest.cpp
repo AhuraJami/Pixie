@@ -186,3 +186,35 @@ TEST(TickableTest, OnlyTickObjectTest)
 
 	EXPECT_NO_FATAL_FAILURE(End(obj));
 }
+
+
+
+
+
+TEST(TickableTest, AccessHiddenObject)
+{
+	TickableObject object;
+	object.some_time = std::chrono::nanoseconds{10};
+	Tickable type_erased_object = object; // copied
+
+	// get pointer to copied object
+	auto ptr1_object = type_erased_object.StaticCast<TickableObject>();
+
+	// expect values be the same since copy
+	EXPECT_EQ(ptr1_object->some_time, object.some_time);
+
+	// modify ptr member to verify copy
+	ptr1_object->some_time = std::chrono::nanoseconds{20};
+
+	EXPECT_NE(ptr1_object->some_time, object.some_time);
+
+	// get another ptr
+	auto ptr2_object = type_erased_object.DynamicCast<TickableObject>();
+
+	// see the ptrs still point to the same object
+	EXPECT_EQ(ptr1_object, ptr2_object);
+	EXPECT_EQ(ptr2_object->some_time, std::chrono::nanoseconds{20});
+
+	// verify incorrect cast returns nullptr
+	EXPECT_EQ(type_erased_object.DynamicCast<NonTickableObject>(), nullptr);
+}
