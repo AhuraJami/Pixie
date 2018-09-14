@@ -50,7 +50,6 @@ public:
 		TickableObject::End();
 		std::cout << "Derived-End" << std::endl;
 	}
-
 };
 
 

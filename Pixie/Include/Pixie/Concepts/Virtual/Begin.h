@@ -33,6 +33,7 @@ PIXIE_EXPORT inline void Begin(T& object)
 	object.self->Begin();
 }
 
+
 class VirtualBegin
 {
 public:
@@ -48,7 +49,6 @@ public:
 	virtual void Begin() = 0;
 
 protected:
-
     /**
      * Overloaded method that calls the Begin method of the object that implements it
      * @tparam T Automatically deduced - Type of class that implements a Begin method

@@ -15,7 +15,7 @@ environment:
     - compiler: msvc-15-seh
       generator: "Visual Studio 15 2017"
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-      before_build: 
+      before_build:
         call "C:\Program Files (x86)\Microsoft Visual Studio\2017\Community\VC\Auxiliary\Build\vcvars32.bat"
 
     - compiler: msvc-15-seh

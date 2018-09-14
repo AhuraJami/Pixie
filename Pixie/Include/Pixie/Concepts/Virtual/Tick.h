@@ -37,6 +37,7 @@ PIXIE_EXPORT inline void Tick(T& object, std::chrono::nanoseconds delta_time)
 	object.self->Tick(delta_time);
 }
 
+
 class VirtualTick
 {
 public:
@@ -51,7 +52,6 @@ public:
 	virtual void Tick(std::chrono::nanoseconds) = 0;
 
 protected:
-
     /**
      * Overloaded method that calls the Tick method of the object that implements it
      * @tparam T Automatically deduced - Type of class that implements a Tick method

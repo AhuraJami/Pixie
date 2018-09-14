@@ -27,7 +27,6 @@ namespace pixie
  */
 class Scene
 {
-	
 public:
 	/** Default constructor */
 	Scene() = default;

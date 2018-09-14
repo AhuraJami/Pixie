@@ -33,6 +33,7 @@ PIXIE_EXPORT inline void End(T& object)
 	object.self->End();
 }
 
+
 class VirtualEnd
 {
 public:
@@ -48,7 +49,6 @@ public:
 	virtual void End() = 0;
 
 protected:
-
     /**
      * Overloaded method that calls the End method of the object that implements it
      * @tparam T (Automatically deduced) Type of class that implements a End method
