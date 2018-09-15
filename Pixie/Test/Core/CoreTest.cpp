@@ -14,12 +14,10 @@ public:
 	~HappyObject()
 	{ std::cout << "dtor" << std::endl; }
 
-	HappyObject(const HappyObject& obj)
-		: counter(obj.counter)
+	HappyObject(const HappyObject& obj)		: counter(obj.counter)
 	{ std::cout << "copy" << std::endl; }
 
-	HappyObject(HappyObject&& obj) noexcept
-		: counter(obj.counter)
+	HappyObject(HappyObject&& obj) noexcept : counter(obj.counter)
 	{ std::cout << "move" << std::endl; }
 
 	HappyObject& operator=(const HappyObject& obj) noexcept = default;
@@ -28,7 +26,7 @@ public:
 
 	void Begin() { }
 
-	void Tick(std::chrono::nanoseconds)
+	void Tick()
 	{
 		counter++;
 

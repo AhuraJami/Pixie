@@ -2,7 +2,6 @@
 #define PIXIE_CONCEPTS_TICKABLE_H
 
 #include <memory>
-#include <chrono>
 
 #include "Pixie/Core/PixieExports.h"
 #include "Pixie/Concepts/Virtual/Tick.h"
@@ -27,7 +26,7 @@ class Tickable
 	template<class T> friend void Begin(T&);
 
 	// Allow Tick to access private member 'self'
-	template<class T> friend void Tick(T&, std::chrono::nanoseconds);
+	template<class T> friend void Tick(T&);
 
 	// Allow End to access private member 'self'
 	template<class T> friend void End(T&);
@@ -137,9 +136,9 @@ private:
          * Implementation of virtual Tick method that is called every frame/iteration
          * @param [in] std::chrono::nanoseconds Time it takes to render a single frame/ finish one iteration
          */
-		inline void Tick(std::chrono::nanoseconds delta_time) override
+		inline void Tick() override
 		{
-			VirtualTick::CallTick(data, delta_time);
+			VirtualTick::CallTick(data);
 		}
 
 

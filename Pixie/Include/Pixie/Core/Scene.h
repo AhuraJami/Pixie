@@ -3,7 +3,6 @@
 
 #include <memory>
 #include <vector>
-#include <chrono>
 
 #include "Pixie/Core/PixieExports.h"
 #include "Pixie/Concepts/Tickable.h"
@@ -60,7 +59,7 @@ public: // public APIs
 	 * Calls the Tick method of all the registered objects (must be implemented)
      * @param [in] delta_time Time it takes to render a single frame/ finish one iteration
 	 */
-	void TickObjects(std::chrono::nanoseconds delta_time);
+	void TickObjects();
 
 	/**
 	 * Calls the End method of all the registered objects (if implemented)

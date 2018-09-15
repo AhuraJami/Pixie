@@ -30,7 +30,7 @@ void Engine::Start()
 		// TODO(Ahura): stop the stop watch
 
 		// Call Tick member of all the registered objects
-		scene->TickObjects(std::chrono::nanoseconds{0});
+		scene->TickObjects();
 	}
 
 	// Call End method of all the registered object (if implemented)
