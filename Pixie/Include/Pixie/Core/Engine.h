@@ -1,7 +1,6 @@
 #ifndef PIXIE_CORE_ENGINE_H
 #define PIXIE_CORE_ENGINE_H
 
-#include "Pixie/Core/PixieExports.h"
 #include "Pixie/Core/Scene.h"
 
 namespace pixie
@@ -43,7 +42,7 @@ public:
 	 * Sets the Engine's scene pointer to the scene object stored in Core database
 	 * @param [in] scene A pointer to the scene that is stored in Core database
 	 */
-	void SetScene(Scene* in_scene) { this->scene = in_scene; }
+	void SetPtrToScene(Scene* in_scene) { this->scene = in_scene; }
 
 private:
 	/// A pointer to scene object which is originally stored in Core database

@@ -4,7 +4,6 @@
 #include <memory>
 #include <vector>
 
-#include "Pixie/Core/PixieExports.h"
 #include "Pixie/Concepts/Tickable.h"
 #include "Pixie/Utility/TypeTraits.h"
 

@@ -2,6 +2,7 @@
 #include <future>
 
 #include "Pixie/Core/Core.h"
+#include "Pixie/Utility/Chrono.h"
 
 using namespace pixie;
 
@@ -29,6 +30,11 @@ public:
 	void Tick()
 	{
 		counter++;
+
+		auto delta_seconds = Chrono::DeltaTimeInSeconds();
+
+		// TODO(Ahura): This test is not so useful. Implement better unit tests once renderer is implemented
+		EXPECT_GE(delta_seconds, 0.0f);
 
 		if (10 == counter)
 			Core::Shutdown();
