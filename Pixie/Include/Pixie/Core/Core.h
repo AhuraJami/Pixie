@@ -2,20 +2,22 @@
 #define PIXIE_CORE_CORE_H
 
 #include "Pixie/Core/PixieExports.h"
-#include "Pixie/Core/Engine.h"
+#include "Engine.h"
 #include "Pixie/Core/Scene.h"
+#include "Clock.h"
 
 namespace pixie
 {
 
+// TODO(Ahura): Const reference is a safe measure that user doesn't accidentally mess up the
+// scene object. However, I think it would be better if these accessors were buried deeper
+// so that user don't think of accessing these core objects so easily.
+// TODO(Ahura): I prefer to have the core and database buried a bit deeper
 /**
  * Static Core class that provides direct interface
  */
 class PIXIE_API Core
 {
-	// Let Engine access the scene in the database
-	friend class Engine;
-
 public:
 	/**
 	 * Initializes Pixie's core objects such as Engine and Scene
@@ -51,11 +53,6 @@ public:
 	static void Destroy();
 
 	/**
-	 * Creates and adds an object of type T into the scene
-	 * @tparam T (Required) Type of the object that is being created and reigstered
-	 */
-
-	/**
 	 * Queries the scene to Create and add an object of type T into the scene
 	 * @tparam T (Required) Type of the object that is being created
 	 * @return A pointer to the created object
@@ -66,6 +63,28 @@ public:
 	template<class T>
 	static inline T* CreateObject();
 
+	/**
+	 * Queries the scene to Create and register a unique instance of the given
+	 * game manager
+	 * @tparam T (Required) Type of the game manager object that is being created
+	 * and registered
+	 */
+	template<class T>
+	static inline void CreateGameManager();
+
+	/**
+	 * Queries the scene to get the unique instance of the game manager
+	 * @tparam T (Required) Type of the registered game manager
+	 * @return A pointer to registered game manager
+	 */
+	template<class T>
+	static inline T* GetGameManager();
+
+	/**
+	 * Get a constant reference to engine
+	 * @return A constant reference to engine object
+	 */
+	static Clock& GetClock() { return database.clock; }
 private:
 	/**
 	 * Database struct where all core objects are stored
@@ -80,6 +99,9 @@ private:
 		/// @note All the objects in the scene are allocated on heap so we can get away
 		/// by stack allocation (fow now)
 		Scene scene;
+
+		/// Specialized Chrono Timer used by engine to measure the rendering time
+		Clock clock;
 	};
 
 	/// A static reference to database struct where all core objects are stored
@@ -98,9 +120,29 @@ template<class T>
 T* Core::CreateObject()
 {
 	if (is_initialized)
+	{
 		return Core::database.scene.CreateAndRegisterObject<T>();
+	}
 	else
+	{
 		return nullptr;
+	}
+}
+
+template<class T>
+void Core::CreateGameManager()
+{
+	if (is_initialized)
+	{
+		Core::database.scene.CreateAndRegisterGameManager<T>();
+	}
+}
+
+template<class T>
+T* Core::GetGameManager()
+{
+	auto& game_manager = Core::database.scene.GetGameManagerRef();
+	return game_manager.DynamicCast<T>();
 }
 
 } //namespace pixie

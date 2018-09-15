@@ -1,3 +1,4 @@
+#include <Pixie/Core/Core.h>
 #include "Pixie/Core/Engine.h"
 
 #include "Pixie/Core/Scene.h"
@@ -21,16 +22,18 @@ void Engine::Start()
 	// Game loop
 	while(is_running)
 	{
-		// TODO(Ahura): start the stop watch
+		// start the stop watch
+		Core::GetClock().StartTimer();
 
 		// TODO(Ahura): process rendering
 
 		// TODO(Ahura): Process user inputs
 
-		// TODO(Ahura): stop the stop watch
+		// stop the stop watch
+		Core::GetClock().StopTimer();
 
 		// Call Tick member of all the registered objects
-		scene->TickObjects(std::chrono::nanoseconds{0});
+		scene->TickObjects();
 	}
 
 	// Call End method of all the registered object (if implemented)

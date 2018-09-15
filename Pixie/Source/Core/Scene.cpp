@@ -12,11 +12,13 @@ void Scene::BeginObjects()
 }
 
 
-void Scene::TickObjects(std::chrono::nanoseconds delta_time)
+void Scene::TickObjects()
 {
+	Tick(game_manager);
+
 	for(auto& object : tickables)
 	{
-		Tick(object, delta_time);
+		Tick(object);
 	}
 }
 

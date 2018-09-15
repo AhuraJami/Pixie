@@ -3,9 +3,7 @@
 
 #include <memory>
 #include <vector>
-#include <chrono>
 
-#include "Pixie/Core/PixieExports.h"
 #include "Pixie/Concepts/Tickable.h"
 #include "Pixie/Utility/TypeTraits.h"
 
@@ -52,6 +50,14 @@ public: // public APIs
 	inline T* CreateAndRegisterObject();
 
 	/**
+	 * Creates and registers a unique instance of the given game manager
+	 * @tparam T (Required) Type of the game manager object that is being created
+	 * and registered
+	 */
+	template<class T>
+	inline void CreateAndRegisterGameManager();
+
+	/**
 	 * Calls the Begin method of all the registered objects (if implemented)
 	 */
 	void BeginObjects();
@@ -60,16 +66,29 @@ public: // public APIs
 	 * Calls the Tick method of all the registered objects (must be implemented)
      * @param [in] delta_time Time it takes to render a single frame/ finish one iteration
 	 */
-	void TickObjects(std::chrono::nanoseconds delta_time);
+	void TickObjects();
 
 	/**
 	 * Calls the End method of all the registered objects (if implemented)
 	 */
 	void EndObjects();
 
+public:
+	/**
+	 * Returns a reference to the type erased instance of the game manager
+	 * @return a reference to the type erased game manager
+	 */
+	Tickable& GetGameManagerRef()
+	{
+		return game_manager;
+	}
+
 private:
+	/// Unique Game Manager for this instance of scene
+	Tickable game_manager = nullptr;
+
 	/// Registered objects that implement Tick concept
-	std::vector<Tickable> tickables;
+	std::vector<Tickable> tickables{};
 };
 
 // =============================================================================
@@ -92,6 +111,12 @@ T* Scene::CreateAndRegisterObject()
 	Tickable obj = T();
 	tickables.emplace_back(std::move(obj));
 	return tickables.back().StaticCast<T>();
+}
+
+template<class T>
+void Scene::CreateAndRegisterGameManager()
+{
+	game_manager = T();
 }
 
 

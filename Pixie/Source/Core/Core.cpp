@@ -12,7 +12,7 @@ void Core::Initialize()
 
 	// Give engine a pointer to the scene so that
 	// it doesn't constantly query the database
-	database.engine.SetScene(&database.scene);
+	database.engine.SetPtrToScene(&database.scene);
 
 	is_initialized = true;
 }

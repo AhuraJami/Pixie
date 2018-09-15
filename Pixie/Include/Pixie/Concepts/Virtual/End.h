@@ -61,7 +61,6 @@ protected:
 		data.End();
 	}
 
-
     /**
      * Overloaded method that is invoked when the object of type T does not have a End method
      * but still is defined to comply with this concept
