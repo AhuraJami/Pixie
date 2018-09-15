@@ -6,6 +6,22 @@
 
 using namespace pixie;
 
+class HappyGameManager
+{
+public:
+	void Begin() {}
+
+	void Tick()
+	{
+		status = true;
+	}
+
+	void End() {}
+
+	bool status = false;
+};
+
+
 class HappyObject
 {
 public:
@@ -49,6 +65,14 @@ TEST(CoreTest, GameLoop)
 	// Initialize Pixie's core
 	Core::Initialize();
 
+	// Query the core to create and register the happy game manager
+	Core::CreateGameManager<HappyGameManager>();
+
+	// Get an instance of the game manager
+	auto game_manager = Core::GetGameManager<HappyGameManager>();
+
+	EXPECT_FALSE(game_manager->status);
+
 	// Create and register the happy object :)
 	auto ptr_obj = Core::CreateObject<HappyObject>();
 
@@ -72,6 +96,9 @@ TEST(CoreTest, GameLoop)
 
 	// verify ptr_obj is changed
 	EXPECT_EQ(ptr_obj->counter, 10);
+
+	// Game manager should have ticked too
+	EXPECT_TRUE(game_manager->status);
 
 	// unnecessary since core components are stack allocated and do not need to
 	// free any other resources - RAII :)

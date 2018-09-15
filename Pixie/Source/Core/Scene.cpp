@@ -14,6 +14,8 @@ void Scene::BeginObjects()
 
 void Scene::TickObjects()
 {
+	Tick(game_manager);
+
 	for(auto& object : tickables)
 	{
 		Tick(object);

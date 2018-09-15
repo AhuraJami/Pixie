@@ -141,7 +141,6 @@ private:
 			VirtualTick::CallTick(data);
 		}
 
-
 		/**
 		 * Implementation of virtual End method that is called at the End of main loop
 		 */

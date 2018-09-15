@@ -64,6 +64,23 @@ public:
 	static inline T* CreateObject();
 
 	/**
+	 * Queries the scene to Create and register a unique instance of the given
+	 * game manager
+	 * @tparam T (Required) Type of the game manager object that is being created
+	 * and registered
+	 */
+	template<class T>
+	static inline void CreateGameManager();
+
+	/**
+	 * Queries the scene to get the unique instance of the game manager
+	 * @tparam T (Required) Type of the registered game manager
+	 * @return A pointer to registered game manager
+	 */
+	template<class T>
+	static inline T* GetGameManager();
+
+	/**
 	 * Get a constant reference to engine
 	 * @return A constant reference to engine object
 	 */
@@ -103,9 +120,29 @@ template<class T>
 T* Core::CreateObject()
 {
 	if (is_initialized)
+	{
 		return Core::database.scene.CreateAndRegisterObject<T>();
+	}
 	else
+	{
 		return nullptr;
+	}
+}
+
+template<class T>
+void Core::CreateGameManager()
+{
+	if (is_initialized)
+	{
+		Core::database.scene.CreateAndRegisterGameManager<T>();
+	}
+}
+
+template<class T>
+T* Core::GetGameManager()
+{
+	auto& game_manager = Core::database.scene.GetGameManagerRef();
+	return game_manager.DynamicCast<T>();
 }
 
 } //namespace pixie
