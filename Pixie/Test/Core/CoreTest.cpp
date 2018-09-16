@@ -60,6 +60,18 @@ public:
 };
 
 
+class BaseObject
+{
+public:
+	void Begin()
+	{
+		++num;
+	}
+
+	int num = 0;
+};
+
+
 TEST(CoreTest, GameLoop)
 {
 	// Initialize Pixie's core
@@ -74,7 +86,8 @@ TEST(CoreTest, GameLoop)
 	EXPECT_FALSE(game_manager->status);
 
 	// Create and register the happy object :)
-	auto ptr_obj = Core::AddObject<HappyObject>();
+	auto happy_ptr = Core::AddObject<HappyObject>();
+	auto base_obj_ptr = Core::AddObject<BaseObject>();
 
 	// Run the code asynchronously
 	auto async_engine = std::async(
@@ -94,11 +107,14 @@ TEST(CoreTest, GameLoop)
 	// this will force the Core::Start() to exit and the thread to die
 	Core::Shutdown();
 
-	// verify ptr_obj is changed
-	EXPECT_EQ(ptr_obj->counter, 10);
+	// verify happy_ptr is changed
+	EXPECT_EQ(happy_ptr->counter, 10);
 
 	// Game manager should have ticked too
 	EXPECT_TRUE(game_manager->status);
+
+	// Verify Begin was called for base object
+	EXPECT_EQ(base_obj_ptr->num, 1);
 
 	// unnecessary since core components are stack allocated and do not need to
 	// free any other resources - RAII :)

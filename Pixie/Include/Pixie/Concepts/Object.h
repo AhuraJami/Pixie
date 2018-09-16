@@ -4,6 +4,8 @@
 #include <memory>
 
 #include "Pixie/Core/PixieExports.h"
+#include "Pixie/Concepts/Virtual/Begin.h"
+#include "Pixie/Concepts/Virtual/End.h"
 
 namespace pixie
 {
@@ -18,6 +20,11 @@ class Object
 {
 	// Forward declaring Model to silence the compiler warning in Object constructor
 	template<class T> struct Model;
+
+	// Since implementation of Begin and End is optional and they are called only once,
+	// allow even base objects to optionally implement it.
+	template<class T> friend void Begin(T&);
+	template<class T> friend void End(T&);
 
 public:
 	/**
@@ -80,7 +87,7 @@ private:
 	/**
 	 * Base type erasure interface class
 	 */
-	struct Concept
+	struct Concept : public VirtualBegin, public VirtualEnd
 	{
 		/** Default virtual destructor */
 		virtual ~Concept() = default;
@@ -112,6 +119,22 @@ private:
 		inline std::unique_ptr<Concept> Copy() const override
 		{
 			return std::make_unique<Model>(*this);
+		}
+
+		/**
+		 * Implementation of virtual Begin method that is called at the beginning of main loop
+		 */
+		inline void Begin() override
+		{
+			VirtualBegin::CallBegin(data);
+		}
+
+		/**
+		 * Implementation of virtual End method that is called at the End of main loop
+		 */
+		inline void End() override
+		{
+			VirtualEnd::CallEnd(data);
 		}
 
 		/** Type erased object that supposedly complies with the implemented concepts */

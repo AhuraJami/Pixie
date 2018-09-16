@@ -3,9 +3,11 @@
 
 #include <memory>
 #include <vector>
+#include <type_traits>
 
-#include "Pixie/Concepts/Tickable.h"
 #include "Pixie/Utility/TypeTraits.h"
+#include "Pixie/Concepts/Object.h"
+#include "Pixie/Concepts/Tickable.h"
 
 namespace pixie
 {
@@ -33,6 +35,22 @@ public:
 	~Scene() = default;
 
 public: // public APIs
+	/**
+	 * Calls the Begin method of all the registered objects (if implemented)
+	 */
+	void BeginObjects();
+
+	/**
+	 * Calls the Tick method of all the registered objects (must be implemented)
+     * @param [in] delta_time Time it takes to render a single frame/ finish one iteration
+	 */
+	void TickObjects();
+
+	/**
+	 * Calls the End method of all the registered objects (if implemented)
+	 */
+	void EndObjects();
+
 	/**
 	 * Creates and registers a unique instance of the given game manager
 	 * @tparam T (Required) Type of the game manager object that is being created
@@ -67,22 +85,6 @@ public: // public APIs
 	template<class T>
 	inline void CopyAndRegisterObject(T object);
 
-	/**
-	 * Calls the Begin method of all the registered objects (if implemented)
-	 */
-	void BeginObjects();
-
-	/**
-	 * Calls the Tick method of all the registered objects (must be implemented)
-     * @param [in] delta_time Time it takes to render a single frame/ finish one iteration
-	 */
-	void TickObjects();
-
-	/**
-	 * Calls the End method of all the registered objects (if implemented)
-	 */
-	void EndObjects();
-
 public:
 	/**
 	 * Returns a reference to the type erased instance of the game manager
@@ -96,6 +98,9 @@ public:
 private:
 	/// Unique Game Manager for this instance of scene
 	Tickable game_manager = nullptr;
+
+	/// Registered objects that don't comply with any of the concepts
+	std::vector<Object> objects;
 
 	/// Registered objects that implement Tick concept
 	std::vector<Tickable> tickables{};
@@ -111,6 +116,8 @@ T* Scene::CreateAndRegisterGameManager()
 	return game_manager.StaticCast<T>();
 }
 
+//GENERATE_HAS_MEMBER(Tick);
+
 template<class T>
 T* Scene::CreateAndRegisterObject()
 {
@@ -125,15 +132,34 @@ T* Scene::CreateAndRegisterObject()
 	// Keeping the dependecy chain, we can have user call a
 	// single Destroy on parent object, and in turn we destroy
 	// all its dependencies.
-	Tickable obj = T();
-	tickables.emplace_back(std::move(obj));
-	return tickables.back().StaticCast<T>();
+	using namespace std;
+
+	if (HasTick<T>)
+	{
+		Tickable obj = T();
+		tickables.emplace_back(move(obj));
+		return tickables.back().StaticCast<T>();
+	}
+	else
+	{
+		Object obj = T();
+		objects.emplace_back(move(obj));
+		return objects.back().StaticCast<T>();
+	}
 }
 
 template<class T>
 void Scene::CopyAndRegisterObject(T object)
 {
-	tickables.emplace_back(std::move(object));
+	using namespace std;
+	if (is_base_of_v<Tickable, T>)
+	{
+		tickables.emplace_back(move(object));
+	}
+	else
+	{
+		objects.emplace_back(move(object));
+	}
 }
 
 } // namespace pixie

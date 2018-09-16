@@ -8,9 +8,17 @@ using namespace pixie;
 
 void Scene::BeginObjects()
 {
-	for(auto& object : tickables)
+	for(auto& obj : tickables)
 	{
-		Begin(object);
+		Begin(obj);
+	}
+
+	// Since pixie allows it and it doesn't cost much,
+	// call Begin for nontickable objects in hope some of
+	// them have implemented it
+	for (auto& obj : objects)
+	{
+		Begin(obj);
 	}
 }
 
@@ -31,6 +39,14 @@ void Scene::EndObjects()
 	for(auto& object : tickables)
 	{
 		End(object);
+	}
+
+	// Since pixie allows it and it doesn't cost much,
+	// call End for nontickable objects in hope some of
+	// them have implemented it
+	for (auto& obj : objects)
+	{
+		End(obj);
 	}
 }
 
