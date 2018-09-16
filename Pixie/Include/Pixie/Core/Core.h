@@ -68,21 +68,24 @@ public:
 	 * game manager
 	 * @tparam T (Required) Type of the game manager object that is being created
 	 * and registered
+	 * @return A pointer to the newly created game manager
+	 * @note Do NOT delete the returned pointer
 	 */
 	template<class T>
-	static inline void CreateGameManager();
+	static inline T* CreateGameManager();
 
 	/**
 	 * Queries the scene to get the unique instance of the game manager
 	 * @tparam T (Required) Type of the registered game manager
 	 * @return A pointer to registered game manager
+	 * @note Do NOT delete the returned pointer
 	 */
 	template<class T>
 	static inline T* GetGameManager();
 
 	/**
-	 * Get a constant reference to engine
-	 * @return A constant reference to engine object
+	 * Get a reference to the core clock
+	 * @return A reference to the core clock
 	 */
 	static Clock& GetClock() { return database.clock; }
 private:
@@ -130,11 +133,15 @@ T* Core::CreateObject()
 }
 
 template<class T>
-void Core::CreateGameManager()
+T* Core::CreateGameManager()
 {
 	if (is_initialized)
 	{
-		Core::database.scene.CreateAndRegisterGameManager<T>();
+		return Core::database.scene.CreateAndRegisterGameManager<T>();
+	}
+	else
+	{
+		return nullptr;
 	}
 }
 

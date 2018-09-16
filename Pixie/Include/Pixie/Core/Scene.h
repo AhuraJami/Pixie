@@ -53,9 +53,11 @@ public: // public APIs
 	 * Creates and registers a unique instance of the given game manager
 	 * @tparam T (Required) Type of the game manager object that is being created
 	 * and registered
+	 * @return A pointer to the newly created game manager
+	 * @note Do NOT delete the returned pointer
 	 */
 	template<class T>
-	inline void CreateAndRegisterGameManager();
+	inline T* CreateAndRegisterGameManager();
 
 	/**
 	 * Calls the Begin method of all the registered objects (if implemented)
@@ -114,9 +116,10 @@ T* Scene::CreateAndRegisterObject()
 }
 
 template<class T>
-void Scene::CreateAndRegisterGameManager()
+T* Scene::CreateAndRegisterGameManager()
 {
 	game_manager = T();
+	return game_manager.StaticCast<T>();
 }
 
 
