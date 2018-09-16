@@ -53,17 +53,6 @@ public:
 	static void Destroy();
 
 	/**
-	 * Queries the scene to Create and add an object of type T into the scene
-	 * @tparam T (Required) Type of the object that is being created
-	 * @return A pointer to the created object
-	 * @note Do NOT delete the returned pointer
-	 * @remark: This level of indirect access is provided to assure that client
-	 * will not attempt to access the scene directly
-	 */
-	template<class T>
-	static inline T* CreateObject();
-
-	/**
 	 * Queries the scene to Create and register a unique instance of the given
 	 * game manager
 	 * @tparam T (Required) Type of the game manager object that is being created
@@ -72,17 +61,40 @@ public:
 	 * @note Do NOT delete the returned pointer
 	 */
 	template<class T>
-	static inline T* CreateGameManager();
+	static inline T* RegisterGameManager();
 
 	/**
 	 * Queries the scene to get the unique instance of the game manager
 	 * @tparam T (Required) Type of the registered game manager
 	 * @return A pointer to registered game manager
-	 * @note Do NOT delete the returned pointer
+	 * @warning Do NOT delete the returned pointer
 	 */
 	template<class T>
 	static inline T* GetGameManager();
 
+	/**
+	 * Queries the scene to Create and add an object of type T into the scene
+	 * @tparam T (Required) Type of the object that is being created
+	 * @return A pointer to the created object
+	 * @warning Do NOT delete the returned pointer
+	 * @remark: This level of indirect access is provided to assure that client
+	 * will not attempt to access the scene directly
+	 */
+	template<class T>
+	static inline T* AddObject();
+
+	/**
+	 * Queries the scene to copy and register and object that satisfies a pixie's
+	 * concept
+	 * @tparam T (Automatically Deduced) Type of the object that is being copied
+	 * to scene
+	 */
+	template<class T>
+	static inline void CopyObject(T object);
+
+	// TODO(Ahura): Returning by reference is not so ideal.
+	// Only Engine needs a reference so it can update it.
+	// Maybe make Engine a friend?
 	/**
 	 * Get a reference to the core clock
 	 * @return A reference to the core clock
@@ -120,20 +132,7 @@ private:
 // Template methods definition
 // =========================================================================
 template<class T>
-T* Core::CreateObject()
-{
-	if (is_initialized)
-	{
-		return Core::database.scene.CreateAndRegisterObject<T>();
-	}
-	else
-	{
-		return nullptr;
-	}
-}
-
-template<class T>
-T* Core::CreateGameManager()
+T* Core::RegisterGameManager()
 {
 	if (is_initialized)
 	{
@@ -150,6 +149,28 @@ T* Core::GetGameManager()
 {
 	auto& game_manager = Core::database.scene.GetGameManagerRef();
 	return game_manager.DynamicCast<T>();
+}
+
+template<class T>
+T* Core::AddObject()
+{
+	if (is_initialized)
+	{
+		return Core::database.scene.CreateAndRegisterObject<T>();
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
+template<class T>
+void Core::CopyObject(T object)
+{
+	if (is_initialized)
+	{
+		return Core::database.scene.CopyAndRegisterObject<T>(std::move(object));
+	}
 }
 
 } //namespace pixie

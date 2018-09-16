@@ -1,3 +1,6 @@
+
+#include <Pixie/Core/Scene.h>
+
 #include "Pixie/Core/Scene.h"
 
 using namespace pixie;
@@ -30,3 +33,4 @@ void Scene::EndObjects()
 		End(object);
 	}
 }
+

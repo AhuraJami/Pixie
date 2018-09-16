@@ -66,7 +66,7 @@ TEST(CoreTest, GameLoop)
 	Core::Initialize();
 
 	// Query the core to create and register the happy game manager
-	Core::CreateGameManager<HappyGameManager>();
+	Core::RegisterGameManager<HappyGameManager>();
 
 	// Get an instance of the game manager
 	auto game_manager = Core::GetGameManager<HappyGameManager>();
@@ -74,7 +74,7 @@ TEST(CoreTest, GameLoop)
 	EXPECT_FALSE(game_manager->status);
 
 	// Create and register the happy object :)
-	auto ptr_obj = Core::CreateObject<HappyObject>();
+	auto ptr_obj = Core::AddObject<HappyObject>();
 
 	// Run the code asynchronously
 	auto async_engine = std::async(

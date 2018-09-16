@@ -1,3 +1,6 @@
+
+#include <Pixie/Core/Core.h>
+
 #include "Pixie/Core/Core.h"
 
 using namespace pixie;

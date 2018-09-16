@@ -33,6 +33,16 @@ public:
 	~Scene() = default;
 
 public: // public APIs
+	/**
+	 * Creates and registers a unique instance of the given game manager
+	 * @tparam T (Required) Type of the game manager object that is being created
+	 * and registered
+	 * @return A pointer to the newly created game manager
+	 * @warning Do NOT delete the returned pointer
+	 */
+	template<class T>
+	inline T* CreateAndRegisterGameManager();
+
 	// TODO(Ahura): Is it a good idea to return a pointer
 	// and let the user store it in their class?
 	// Although convenient, it is problematic if we want to
@@ -44,20 +54,18 @@ public: // public APIs
 	 * Creates and adds an object of type T into the scene
 	 * @tparam T (Required) Type of the object that is being created and registered
 	 * @return A pointer to the created object
-	 * @note Do NOT delete the returned pointer
+	 * @warning Do NOT delete the returned pointer
 	 */
 	template<class T>
 	inline T* CreateAndRegisterObject();
 
 	/**
-	 * Creates and registers a unique instance of the given game manager
-	 * @tparam T (Required) Type of the game manager object that is being created
-	 * and registered
-	 * @return A pointer to the newly created game manager
-	 * @note Do NOT delete the returned pointer
+	 * Copies the input object of type T into the scene
+	 * @tparam T (Automatically Deduced) Type of the object that is being copied
+	 * and registered into the scene
 	 */
 	template<class T>
-	inline T* CreateAndRegisterGameManager();
+	inline void CopyAndRegisterObject(T object);
 
 	/**
 	 * Calls the Begin method of all the registered objects (if implemented)
@@ -97,6 +105,13 @@ private:
 // Template methods definition
 // =============================================================================
 template<class T>
+T* Scene::CreateAndRegisterGameManager()
+{
+	game_manager = T();
+	return game_manager.StaticCast<T>();
+}
+
+template<class T>
 T* Scene::CreateAndRegisterObject()
 {
 	// TODO(Ahura): Causes the T to be moved at least twice
@@ -116,12 +131,10 @@ T* Scene::CreateAndRegisterObject()
 }
 
 template<class T>
-T* Scene::CreateAndRegisterGameManager()
+void Scene::CopyAndRegisterObject(T object)
 {
-	game_manager = T();
-	return game_manager.StaticCast<T>();
+	tickables.emplace_back(std::move(object));
 }
-
 
 } // namespace pixie
 
