@@ -10,7 +10,11 @@ project(PIXIE VERSION 0.0.1 LANGUAGES C CXX)
 set(CMAKE_CXX_STANDARD 17)
 
 # Tell CMake not to define WIN32 when building with Cygwin.
-# set(CMAKE_LEGACY_CYGWIN_WIN32 OFF)
+set(CMAKE_LEGACY_CYGWIN_WIN32 OFF)
+
+# Report compiler info
+message("Compiler id: ${CMAKE_CXX_COMPILER_ID}\n"
+        "Compiler version: ${CMAKE_CXX_COMPILER_VERSION}\n")
 
 #=========================================================================================
 # Setup CMake Options
@@ -22,6 +26,7 @@ option(PIXIE_RUN_UNIT_TESTS      "Allows for the unit tests to be run at compile
 # Add subdirectories
 #=========================================================================================
 add_subdirectory(Pixie)
+
 
 
 

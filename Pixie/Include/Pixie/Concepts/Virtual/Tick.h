@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include "Pixie/Core/PixieExports.h"
+#include "Pixie/Utility/PixieExports.h"
 #include "Pixie/Utility/TypeTraits.h"
 
 namespace pixie

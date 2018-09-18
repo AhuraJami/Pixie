@@ -1,13 +1,15 @@
-#ifndef PIXIE_CORE_SCENE_H
-#define PIXIE_CORE_SCENE_H
+#ifndef PIXIE_CORE_SCENE_SCENE__H
+#define PIXIE_CORE_SCENE_SCENE__H
 
 #include <memory>
 #include <vector>
 #include <type_traits>
 
-#include "Pixie/Utility/TypeTraits.h"
 #include "Pixie/Concepts/Object.h"
 #include "Pixie/Concepts/Tickable.h"
+#include "Pixie/Core/Scene/Forest.h"
+#include "Pixie/Core/Placeholders.h"
+#include "Pixie/Utility/TypeTraits.h"
 
 namespace pixie
 {
@@ -59,7 +61,7 @@ public: // public APIs
 	 * @warning Do NOT delete the returned pointer
 	 */
 	template<class T>
-	inline T* CreateAndRegisterGameManager();
+	inline T* CreateGameManager();
 
 	// TODO(Ahura): Is it a good idea to return a pointer
 	// and let the user store it in their class?
@@ -75,7 +77,7 @@ public: // public APIs
 	 * @warning Do NOT delete the returned pointer
 	 */
 	template<class T>
-	inline T* CreateAndRegisterObject();
+	inline T* CreateObject();
 
 	/**
 	 * Copies the input object of type T into the scene
@@ -83,7 +85,10 @@ public: // public APIs
 	 * and registered into the scene
 	 */
 	template<class T>
-	inline void CopyAndRegisterObject(T object);
+	inline void CopyObject(T object);
+
+	template<class T>
+	inline T* CreateComponent();
 
 public:
 	/**
@@ -95,22 +100,25 @@ public:
 		return game_manager;
 	}
 
+	const Tickable& GetGameManagerRef() const
+	{
+		return game_manager;
+	}
+
 private:
 	/// Unique Game Manager for this instance of scene
-	Tickable game_manager = nullptr;
+	Tickable game_manager = GameManagerPlaceHolder();
 
-	/// Registered objects that don't comply with any of the concepts
-	std::vector<Object> objects;
-
-	/// Registered objects that implement Tick concept
-	std::vector<Tickable> tickables{};
+	/// Forest that holds registered objects grouped by their construction
+	/// dependency and sorted by their execution id (tick_group)
+	Forest forest = Forest();
 };
 
 // =============================================================================
 // Template methods definition
 // =============================================================================
 template<class T>
-T* Scene::CreateAndRegisterGameManager()
+T* Scene::CreateGameManager()
 {
 	game_manager = T();
 	return game_manager.StaticCast<T>();
@@ -119,7 +127,7 @@ T* Scene::CreateAndRegisterGameManager()
 //GENERATE_HAS_MEMBER(Tick);
 
 template<class T>
-T* Scene::CreateAndRegisterObject()
+T* Scene::CreateObject()
 {
 	// TODO(Ahura): Causes the T to be moved at least twice
 	// and its destructor to be called twice as well.
@@ -132,36 +140,23 @@ T* Scene::CreateAndRegisterObject()
 	// Keeping the dependecy chain, we can have user call a
 	// single Destroy on parent object, and in turn we destroy
 	// all its dependencies.
-	using namespace std;
-
-	if (HasTick<T>)
-	{
-		Tickable obj = T();
-		tickables.emplace_back(move(obj));
-		return tickables.back().StaticCast<T>();
-	}
-	else
-	{
-		Object obj = T();
-		objects.emplace_back(move(obj));
-		return objects.back().StaticCast<T>();
-	}
+	return forest.CreateObject<T>();
 }
 
 template<class T>
-void Scene::CopyAndRegisterObject(T object)
+void Scene::CopyObject(T object)
 {
-	using namespace std;
-	if (is_base_of_v<Tickable, T>)
-	{
-		tickables.emplace_back(move(object));
-	}
-	else
-	{
-		objects.emplace_back(move(object));
-	}
+	// TODO(Ahura): Missing implementation and unit tests
 }
+
+template<class T>
+T* Scene::CreateComponent()
+{
+	return forest.CreateComponent<T>();
+}
+
+
 
 } // namespace pixie
 
-#endif //ENGINE_CORE_SCENE_H
+#endif //PIXIE_CORE_SCENE_SCENE__H

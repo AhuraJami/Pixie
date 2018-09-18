@@ -1,17 +1,18 @@
 #ifndef PIXIE_CORE_CORE_H
 #define PIXIE_CORE_CORE_H
 
-#include "Pixie/Core/PixieExports.h"
-#include "Engine.h"
-#include "Pixie/Core/Scene.h"
-#include "Clock.h"
+#include "Pixie/Utility/PixieExports.h"
+#include "Pixie/Core/Engine/Engine.h"
+#include "Pixie/Core/Scene/Scene.h"
+#include "Pixie/Core/Engine/Clock.h"
 
 namespace pixie
 {
 
-// TODO(Ahura): Const reference is a safe measure that user doesn't accidentally mess up the
-// scene object. However, I think it would be better if these accessors were buried deeper
-// so that user don't think of accessing these core objects so easily.
+// TODO(Ahura): Const reference is a safe measure that user doesn't accidentally
+// mess up the scene object. However, I think it would be better if these
+// accessors were buried deeper so that user don't think of accessing these
+// core objects so easily.
 // TODO(Ahura): I prefer to have the core and database buried a bit deeper
 /**
  * Static Core class that provides direct interface
@@ -61,7 +62,7 @@ public:
 	 * @note Do NOT delete the returned pointer
 	 */
 	template<class T>
-	static inline T* RegisterGameManager();
+	static inline T* CreateGameManager();
 
 	/**
 	 * Queries the scene to get the unique instance of the game manager
@@ -81,7 +82,17 @@ public:
 	 * will not attempt to access the scene directly
 	 */
 	template<class T>
-	static inline T* AddObject();
+	static inline T* CreateObject();
+
+	/**
+	 * Queries the scene to Create a component of type T and form its
+	 * dependencies
+	 * @tparam T (Required) Type of the component that is being created
+	 * @return A pointer to the created component
+	 * @warning Do NOT delete the returned pointer
+	 */
+	template<class T>
+	static inline T* CreateComponent();
 
 	/**
 	 * Queries the scene to copy and register and object that satisfies a pixie's
@@ -107,12 +118,13 @@ private:
 	struct Database
 	{
 		/// Engine object
-		/// @note Engine is still pretty small so no heap-allocation needed (for now)
+		/// @note Engine is still pretty small so no heap-allocation needed
+		/// (for now)
 		Engine engine;
 
 		/// Scene where all registered objects live
-		/// @note All the objects in the scene are allocated on heap so we can get away
-		/// by stack allocation (fow now)
+		/// @note All the objects in the scene are allocated on heap so we can
+		/// get away by stack allocation (for now)
 		Scene scene;
 
 		/// Specialized Chrono Timer used by engine to measure the rendering time
@@ -132,16 +144,13 @@ private:
 // Template methods definition
 // =========================================================================
 template<class T>
-T* Core::RegisterGameManager()
+T* Core::CreateGameManager()
 {
 	if (is_initialized)
 	{
-		return Core::database.scene.CreateAndRegisterGameManager<T>();
+		return Core::database.scene.CreateGameManager<T>();
 	}
-	else
-	{
-		return nullptr;
-	}
+	return nullptr;
 }
 
 template<class T>
@@ -152,16 +161,23 @@ T* Core::GetGameManager()
 }
 
 template<class T>
-T* Core::AddObject()
+T* Core::CreateObject()
 {
 	if (is_initialized)
 	{
-		return Core::database.scene.CreateAndRegisterObject<T>();
+		return Core::database.scene.CreateObject<T>();
 	}
-	else
+	return nullptr;
+}
+
+template<class T>
+T* Core::CreateComponent()
+{
+	if (is_initialized)
 	{
-		return nullptr;
+		return Core::database.scene.CreateComponent<T>();
 	}
+	return nullptr;
 }
 
 template<class T>
@@ -169,10 +185,10 @@ void Core::CopyObject(T object)
 {
 	if (is_initialized)
 	{
-		return Core::database.scene.CopyAndRegisterObject<T>(std::move(object));
+		return Core::database.scene.CopyObject<T>(std::move(object));
 	}
 }
 
 } //namespace pixie
 
-#endif //PIXIE_STATICLIBRARY_H
+#endif //PIXIE_CORE_CORE_H

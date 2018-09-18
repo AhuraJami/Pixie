@@ -4,7 +4,7 @@
 #include <chrono>
 #include <Pixie/Core/Core.h>
 
-#include "Pixie/Core/PixieExports.h"
+#include "PixieExports.h"
 
 
 namespace pixie

@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "Pixie/Core/PixieExports.h"
+#include "Pixie/Utility/PixieExports.h"
 #include "Pixie/Concepts/Virtual/Begin.h"
 #include "Pixie/Concepts/Virtual/End.h"
 

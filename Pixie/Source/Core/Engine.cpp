@@ -1,7 +1,7 @@
 #include <Pixie/Core/Core.h>
-#include "Pixie/Core/Engine.h"
+#include "Pixie/Core/Engine/Engine.h"
 
-#include "Pixie/Core/Scene.h"
+#include "Pixie/Core/Scene/Scene.h"
 
 using namespace pixie;
 

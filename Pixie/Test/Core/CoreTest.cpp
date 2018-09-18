@@ -22,11 +22,21 @@ public:
 };
 
 
+class HappySubobject
+{
+public:
+	void Tick() {};
+};
+
+
 class HappyObject
 {
 public:
 	HappyObject()
-	{ std::cout << "ctor" << std::endl; }
+	{
+		Core::CreateComponent<HappySubobject>();
+		std::cout << "ctor" << std::endl;
+	}
 
 	~HappyObject()
 	{ std::cout << "dtor" << std::endl; }
@@ -78,7 +88,7 @@ TEST(CoreTest, GameLoop)
 	Core::Initialize();
 
 	// Query the core to create and register the happy game manager
-	Core::RegisterGameManager<HappyGameManager>();
+	Core::CreateGameManager<HappyGameManager>();
 
 	// Get an instance of the game manager
 	auto game_manager = Core::GetGameManager<HappyGameManager>();
@@ -86,8 +96,8 @@ TEST(CoreTest, GameLoop)
 	EXPECT_FALSE(game_manager->status);
 
 	// Create and register the happy object :)
-	auto happy_ptr = Core::AddObject<HappyObject>();
-	auto base_obj_ptr = Core::AddObject<BaseObject>();
+	auto happy_ptr = Core::CreateObject<HappyObject>();
+	auto base_obj_ptr = Core::CreateObject<BaseObject>();
 
 	// Run the code asynchronously
 	auto async_engine = std::async(
@@ -118,5 +128,14 @@ TEST(CoreTest, GameLoop)
 
 	// unnecessary since core components are stack allocated and do not need to
 	// free any other resources - RAII :)
+	Core::Destroy();
+}
+
+TEST(CoreTest, SubobjectCreation)
+{
+	Core::Initialize();
+
+	Core::CreateObject<HappyObject>();
+
 	Core::Destroy();
 }

@@ -1,5 +1,5 @@
-#ifndef PIXIE_CORE_CHRONO_H
-#define PIXIE_CORE_CHRONO_H
+#ifndef PIXIE_CORE_ENGINE_CHRONO_H
+#define PIXIE_CORE_ENGINE_CHRONO_H
 
 #include <chrono>
 
@@ -93,4 +93,4 @@ private:
 
 } // namespace pixie
 
-#endif //PIXIE_CORE_CHRONO_H
+#endif //PIXIE_CORE_ENGINE_CHRONO_H

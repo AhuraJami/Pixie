@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "Pixie/Core/PixieExports.h"
+#include "Pixie/Utility/PixieExports.h"
 #include "Pixie/Concepts/Virtual/Tick.h"
 #include "Pixie/Concepts/Virtual/Begin.h"
 #include "Pixie/Concepts/Virtual/End.h"
@@ -30,6 +30,7 @@ class Tickable
 
 	// Allow End to access private member 'self'
 	template<class T> friend void End(T&);
+
 public:
 	/**
 	 * (Constructor) Constructs the input object of type T in the heap and stores a unique pointer to it.

@@ -1,7 +1,7 @@
-#ifndef PIXIE_CORE_ENGINE_H
-#define PIXIE_CORE_ENGINE_H
+#ifndef PIXIE_CORE_ENGINE_ENGINE_H
+#define PIXIE_CORE_ENGINE_ENGINE_H
 
-#include "Pixie/Core/Scene.h"
+#include "Pixie/Core/Scene/Scene.h"
 
 namespace pixie
 {
@@ -54,4 +54,4 @@ private:
 
 } // namespace pixie
 
-#endif // PIXIE_CORE_ENGINE_H
+#endif // PIXIE_CORE_ENGINE_ENGINE_H

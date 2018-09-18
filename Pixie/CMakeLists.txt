@@ -30,17 +30,24 @@ target_include_directories(Pixie
 #=========================================================================================
 target_sources(Pixie
     PUBLIC
-        ${PIXIE_INCLUDE_DIR}/Core/PixieExports.h
-        ${PIXIE_INCLUDE_DIR}/Core/Core.h
-        ${PIXIE_INCLUDE_DIR}/Core/Scene.h
-        ${PIXIE_INCLUDE_DIR}/Core/Clock.h
         ${PIXIE_INCLUDE_DIR}/Concepts/Virtual/Begin.h
         ${PIXIE_INCLUDE_DIR}/Concepts/Virtual/Tick.h
         ${PIXIE_INCLUDE_DIR}/Concepts/Virtual/End.h
+
         ${PIXIE_INCLUDE_DIR}/Concepts/Object.h
         ${PIXIE_INCLUDE_DIR}/Concepts/Tickable.h
+
+        ${PIXIE_INCLUDE_DIR}/Core/Core.h
+        ${PIXIE_INCLUDE_DIR}/Core/Placeholders.h
+        ${PIXIE_INCLUDE_DIR}/Core/Engine/Clock.h
+        ${PIXIE_INCLUDE_DIR}/Core/Engine/Engine.h
+        ${PIXIE_INCLUDE_DIR}/Core/Scene/Scene.h
+        ${PIXIE_INCLUDE_DIR}/Core/Scene/Forest.h
+
+        ${PIXIE_INCLUDE_DIR}/Utility/PixieExports.h
         ${PIXIE_INCLUDE_DIR}/Utility/TypeTraits.h
         ${PIXIE_INCLUDE_DIR}/Utility/Chrono.h
+
     PRIVATE
         ${PIXIE_SOURCE_DIR}/Core/Core.cpp
         ${PIXIE_SOURCE_DIR}/Core/Scene.cpp
@@ -77,7 +84,14 @@ set_target_properties(Pixie PROPERTIES
 #=========================================================================================
 # Add thirdparty libraries
 #=========================================================================================
-
+# It seems like all of std::variant's features are not available until
+# AppleClang version 10.1 which unfortunately Travis CI doesn't support
+# yet. So for now, we're going to use mpark::variable instead of the
+# standard one for AppleClang platform
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+    include(MParkVariant)
+    target_compile_definitions(Pixie PUBLIC __APPLE_CLANG__)
+endif()
 
 #=========================================================================================
 # Enable unit tests
