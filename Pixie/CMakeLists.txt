@@ -38,16 +38,17 @@ target_sources(Pixie
         ${PIXIE_INCLUDE_DIR}/Concepts/Tickable.h
 
         ${PIXIE_INCLUDE_DIR}/Core/Core.h
-        ${PIXIE_INCLUDE_DIR}/Core/Placeholders.h
+        ${PIXIE_INCLUDE_DIR}/Core/ObjectInitializer.h
         ${PIXIE_INCLUDE_DIR}/Core/Engine/Clock.h
         ${PIXIE_INCLUDE_DIR}/Core/Engine/Engine.h
         ${PIXIE_INCLUDE_DIR}/Core/Scene/Scene.h
         ${PIXIE_INCLUDE_DIR}/Core/Scene/Forest.h
 
-        ${PIXIE_INCLUDE_DIR}/Utility/PixieExports.h
+        ${PIXIE_INCLUDE_DIR}/Misc/Placeholders.h
+        ${PIXIE_INCLUDE_DIR}/Misc/PixieExports.h
+
         ${PIXIE_INCLUDE_DIR}/Utility/TypeTraits.h
         ${PIXIE_INCLUDE_DIR}/Utility/Chrono.h
-
     PRIVATE
         ${PIXIE_SOURCE_DIR}/Core/Core.cpp
         ${PIXIE_SOURCE_DIR}/Core/Scene.cpp

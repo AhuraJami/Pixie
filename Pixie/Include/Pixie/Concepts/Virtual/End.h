@@ -1,7 +1,7 @@
 #ifndef PIXIE_CONCEPTS_VIRTUAL_END_H
 #define PIXIE_CONCEPTS_VIRTUAL_END_H
 
-#include "Pixie/Utility/PixieExports.h"
+#include "Pixie/Misc/PixieExports.h"
 #include "Pixie/Utility/TypeTraits.h"
 
 namespace pixie

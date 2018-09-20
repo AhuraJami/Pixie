@@ -1,7 +1,7 @@
 #ifndef PIXIE_CORE_PLACEHOLDERS_H
 #define PIXIE_CORE_PLACEHOLDERS_H
 
-class GameManagerPlaceHolder
+class ConceptPlaceHolder
 {
 public:
 	void Begin() {}

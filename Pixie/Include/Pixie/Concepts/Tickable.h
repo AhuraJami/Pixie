@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "Pixie/Utility/PixieExports.h"
+#include "Pixie/Misc/PixieExports.h"
 #include "Pixie/Concepts/Virtual/Tick.h"
 #include "Pixie/Concepts/Virtual/Begin.h"
 #include "Pixie/Concepts/Virtual/End.h"
@@ -17,7 +17,7 @@ namespace pixie
  * Type erasure class that implements polymorphic Begin, Tick, and End concepts.
  * @NOTE: Any object that Ticks should be type erased into this class
  */
-class Tickable
+class Tickable final
 {
 	// Forward declaring Model to silence the compiler warning in Tickable constructor
 	template<class T> struct Model;
@@ -32,6 +32,14 @@ class Tickable
 	template<class T> friend void End(T&);
 
 public:
+	Tickable() = default;
+
+	template<class T>
+	void Create()
+	{
+		self = std::make_unique<Model<T>>();
+	}
+
 	/**
 	 * (Constructor) Constructs the input object of type T in the heap and stores a unique pointer to it.
 	 * @tparam T (Automatically deduced) Type of input object that supposedly implements the concepts of this class
@@ -44,7 +52,7 @@ public:
 
 	/** Copy constructor */
 	PIXIE_EXPORT Tickable(const Tickable& object)
-			: self(object.self->Copy())
+			: self(object.self ? object.self->Copy() : nullptr)
 	{ }
 
 	/** Default move constructor */
@@ -110,6 +118,8 @@ private:
 	template<class T>
 	struct Model final : public Concept
 	{
+		Model() : data(T()) {}
+
 		/**
 		 * (Constructor) Moves and stores the input object of type T in 'data'
 		 * @param [in] x An object that supposedly implements the concepts

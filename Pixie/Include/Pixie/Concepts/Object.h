@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "Pixie/Utility/PixieExports.h"
+#include "Pixie/Misc/PixieExports.h"
 #include "Pixie/Concepts/Virtual/Begin.h"
 #include "Pixie/Concepts/Virtual/End.h"
 
@@ -16,7 +16,7 @@ namespace pixie
  * @NOTE: Any object that doesn't satisfy any of the concepts must be stored in
  * this class
  */
-class Object
+class Object final
 {
 	// Forward declaring Model to silence the compiler warning in Object constructor
 	template<class T> struct Model;
@@ -27,6 +27,13 @@ class Object
 	template<class T> friend void End(T&);
 
 public:
+	Object() = default;
+
+	template<class T>
+	void Create()
+	{
+		self = std::make_unique<Model<T>>();
+	}
 	/**
 	 * (Constructor) Constructs the input object of type T in the heap and stores a unique pointer to it.
 	 * @tparam T (Automatically deduced) Type of input object that doesn't implement any of
@@ -40,7 +47,7 @@ public:
 
 	/** Copy constructor */
 	PIXIE_EXPORT Object(const Object& object)
-			: self(object.self->Copy())
+			: self(object.self ? object.self->Copy() : nullptr)
 	{ }
 
 	/** Default move constructor */
@@ -106,6 +113,8 @@ private:
 	template<class T>
 	struct Model final : public Concept
 	{
+		Model() : data(T()) {}
+
 		/**
 		 * (Constructor) Moves and stores the input object of type T into 'data'
 		 * @param [in] x An object that doesn't implement any of the pixie's concepts

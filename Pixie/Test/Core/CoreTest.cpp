@@ -2,6 +2,7 @@
 #include <future>
 
 #include "Pixie/Core/Core.h"
+#include "Pixie/Core/ObjectInitializer.h"
 #include "Pixie/Utility/Chrono.h"
 
 using namespace pixie;
@@ -34,7 +35,7 @@ class HappyObject
 public:
 	HappyObject()
 	{
-		Core::CreateComponent<HappySubobject>();
+		ObjectInitializer::ConstructComponent<HappySubobject>();
 		std::cout << "ctor" << std::endl;
 	}
 
@@ -88,16 +89,16 @@ TEST(CoreTest, GameLoop)
 	Core::Initialize();
 
 	// Query the core to create and register the happy game manager
-	Core::CreateGameManager<HappyGameManager>();
+	ObjectInitializer::ConstructGameManager<HappyGameManager>();
 
 	// Get an instance of the game manager
-	auto game_manager = Core::GetGameManager<HappyGameManager>();
+	auto game_manager = ObjectInitializer::GetGameManager<HappyGameManager>();
 
 	EXPECT_FALSE(game_manager->status);
 
 	// Create and register the happy object :)
-	auto happy_ptr = Core::CreateObject<HappyObject>();
-	auto base_obj_ptr = Core::CreateObject<BaseObject>();
+	auto happy_ptr = ObjectInitializer::ConstructEntity<HappyObject>();
+	auto base_obj_ptr = ObjectInitializer::ConstructEntity<BaseObject>();
 
 	// Run the code asynchronously
 	auto async_engine = std::async(
@@ -135,7 +136,7 @@ TEST(CoreTest, SubobjectCreation)
 {
 	Core::Initialize();
 
-	Core::CreateObject<HappyObject>();
+	ObjectInitializer::ConstructEntity<HappyObject>();
 
 	Core::Destroy();
 }

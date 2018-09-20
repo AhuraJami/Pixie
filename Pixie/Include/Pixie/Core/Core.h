@@ -1,7 +1,7 @@
 #ifndef PIXIE_CORE_CORE_H
 #define PIXIE_CORE_CORE_H
 
-#include "Pixie/Utility/PixieExports.h"
+#include "Pixie/Misc/PixieExports.h"
 #include "Pixie/Core/Engine/Engine.h"
 #include "Pixie/Core/Scene/Scene.h"
 #include "Pixie/Core/Engine/Clock.h"
@@ -19,6 +19,7 @@ namespace pixie
  */
 class PIXIE_API Core
 {
+	friend class ObjectInitializer;
 public:
 	/**
 	 * Initializes Pixie's core objects such as Engine and Scene
@@ -52,56 +53,6 @@ public:
 	 * Core::Initialize again.
 	 */
 	static void Destroy();
-
-	/**
-	 * Queries the scene to Create and register a unique instance of the given
-	 * game manager
-	 * @tparam T (Required) Type of the game manager object that is being created
-	 * and registered
-	 * @return A pointer to the newly created game manager
-	 * @note Do NOT delete the returned pointer
-	 */
-	template<class T>
-	static inline T* CreateGameManager();
-
-	/**
-	 * Queries the scene to get the unique instance of the game manager
-	 * @tparam T (Required) Type of the registered game manager
-	 * @return A pointer to registered game manager
-	 * @warning Do NOT delete the returned pointer
-	 */
-	template<class T>
-	static inline T* GetGameManager();
-
-	/**
-	 * Queries the scene to Create and add an object of type T into the scene
-	 * @tparam T (Required) Type of the object that is being created
-	 * @return A pointer to the created object
-	 * @warning Do NOT delete the returned pointer
-	 * @remark: This level of indirect access is provided to assure that client
-	 * will not attempt to access the scene directly
-	 */
-	template<class T>
-	static inline T* CreateObject();
-
-	/**
-	 * Queries the scene to Create a component of type T and form its
-	 * dependencies
-	 * @tparam T (Required) Type of the component that is being created
-	 * @return A pointer to the created component
-	 * @warning Do NOT delete the returned pointer
-	 */
-	template<class T>
-	static inline T* CreateComponent();
-
-	/**
-	 * Queries the scene to copy and register and object that satisfies a pixie's
-	 * concept
-	 * @tparam T (Automatically Deduced) Type of the object that is being copied
-	 * to scene
-	 */
-	template<class T>
-	static inline void CopyObject(T object);
 
 	// TODO(Ahura): Returning by reference is not so ideal.
 	// Only Engine needs a reference so it can update it.
@@ -138,56 +89,6 @@ private:
 	/// any of the other method to access the database members
 	static bool is_initialized;
 };
-
-
-// =========================================================================
-// Template methods definition
-// =========================================================================
-template<class T>
-T* Core::CreateGameManager()
-{
-	if (is_initialized)
-	{
-		return Core::database.scene.CreateGameManager<T>();
-	}
-	return nullptr;
-}
-
-template<class T>
-T* Core::GetGameManager()
-{
-	auto& game_manager = Core::database.scene.GetGameManagerRef();
-	return game_manager.DynamicCast<T>();
-}
-
-template<class T>
-T* Core::CreateObject()
-{
-	if (is_initialized)
-	{
-		return Core::database.scene.CreateObject<T>();
-	}
-	return nullptr;
-}
-
-template<class T>
-T* Core::CreateComponent()
-{
-	if (is_initialized)
-	{
-		return Core::database.scene.CreateComponent<T>();
-	}
-	return nullptr;
-}
-
-template<class T>
-void Core::CopyObject(T object)
-{
-	if (is_initialized)
-	{
-		return Core::database.scene.CopyObject<T>(std::move(object));
-	}
-}
 
 } //namespace pixie
 
