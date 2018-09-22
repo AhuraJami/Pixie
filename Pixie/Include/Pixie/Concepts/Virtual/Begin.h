@@ -1,8 +1,8 @@
 #ifndef PIXIE_CONCEPTS_VIRTUAL_BEGIN_H
 #define PIXIE_CONCEPTS_VIRTUAL_BEGIN_H
 
-#include "Core/PixieExports.h"
-#include "Utility/TypeTraits.h"
+#include "Pixie/Misc/PixieExports.h"
+#include "Pixie/Utility/TypeTraits.h"
 
 namespace pixie
 {
@@ -33,6 +33,7 @@ PIXIE_EXPORT inline void Begin(T& object)
 	object.self->Begin();
 }
 
+
 class VirtualBegin
 {
 public:
@@ -48,7 +49,6 @@ public:
 	virtual void Begin() = 0;
 
 protected:
-
     /**
      * Overloaded method that calls the Begin method of the object that implements it
      * @tparam T Automatically deduced - Type of class that implements a Begin method
@@ -61,7 +61,6 @@ protected:
 		data.Begin();
 	}
 
-
     /**
      * Overloaded method that is invoked when the object of type T does not have a Begin method
      * but still is defined to comply with this concept
@@ -70,7 +69,7 @@ protected:
      */
 	template<class T, typename
 	std::enable_if_t<HasBegin<T> == 0> * = nullptr>
-	static inline void CallBegin(T& data)
+	static inline void CallBegin(T&)
 	{
 		// Do nothing.
 	}

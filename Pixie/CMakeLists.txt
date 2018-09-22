@@ -21,7 +21,7 @@ set(PIXIE_SOURCE_DIR    ${CMAKE_CURRENT_SOURCE_DIR}/Source)
 target_include_directories(Pixie
         PUBLIC
             $<INSTALL_INTERFACE:include/pixie>
-            $<BUILD_INTERFACE:${PIXIE_INCLUDE_DIR}>
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Include/>
         PRIVATE
             ${PIXIE_SOURCE_DIR})
 
@@ -30,13 +30,28 @@ target_include_directories(Pixie
 #=========================================================================================
 target_sources(Pixie
     PUBLIC
-        ${PIXIE_INCLUDE_DIR}/Core/PixieExports.h
-        ${PIXIE_INCLUDE_DIR}/Utility/TypeTraits.h
         ${PIXIE_INCLUDE_DIR}/Concepts/Virtual/Begin.h
         ${PIXIE_INCLUDE_DIR}/Concepts/Virtual/Tick.h
         ${PIXIE_INCLUDE_DIR}/Concepts/Virtual/End.h
+
+        ${PIXIE_INCLUDE_DIR}/Concepts/Object.h
         ${PIXIE_INCLUDE_DIR}/Concepts/Tickable.h
 
+        ${PIXIE_INCLUDE_DIR}/Core/Core.h
+        ${PIXIE_INCLUDE_DIR}/Core/ObjectInitializer.h
+        ${PIXIE_INCLUDE_DIR}/Core/Engine/Clock.h
+        ${PIXIE_INCLUDE_DIR}/Core/Engine/Engine.h
+        ${PIXIE_INCLUDE_DIR}/Core/Scene/Scene.h
+        ${PIXIE_INCLUDE_DIR}/Core/Scene/Forest.h
+
+        ${PIXIE_INCLUDE_DIR}/Misc/Placeholders.h
+        ${PIXIE_INCLUDE_DIR}/Misc/PixieExports.h
+
+        ${PIXIE_INCLUDE_DIR}/Utility/TypeTraits.h
+        ${PIXIE_INCLUDE_DIR}/Utility/Chrono.h
+    PRIVATE
+        ${PIXIE_SOURCE_DIR}/Core/Core.cpp
+        ${PIXIE_SOURCE_DIR}/Core/Scene.cpp
 )
 
 #=========================================================================================
@@ -52,13 +67,13 @@ target_compile_features(Pixie
 
 # Add compile flags
 target_compile_options(Pixie
-    PRIVATE
+    PUBLIC
         # GNU (g++)
         $<$<CXX_COMPILER_ID:GNU>:$<BUILD_INTERFACE:-Wall; -Wextra; -Wpedantic>>
         # Clang
         $<$<CXX_COMPILER_ID:Clang>:$<BUILD_INTERFACE:-Wall; -Wextra; -Wpedantic>>
         # MSVC
-        $<$<CXX_COMPILER_ID:MSVC>:$<BUILD_INTERFACE:/W4>>)
+        $<$<CXX_COMPILER_ID:MSVC>:$<BUILD_INTERFACE:/W4; /permissive->>)
 
 # Set output build and output directories so that test executables end up next to dll's
 set_target_properties(Pixie PROPERTIES
@@ -70,7 +85,14 @@ set_target_properties(Pixie PROPERTIES
 #=========================================================================================
 # Add thirdparty libraries
 #=========================================================================================
-
+# It seems like all of std::variant's features are not available until
+# AppleClang version 10.1 which unfortunately Travis CI doesn't support
+# yet. So for now, we're going to use mpark::variable instead of the
+# standard one for AppleClang platform
+if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+    include(MParkVariant)
+    target_compile_definitions(Pixie PUBLIC __APPLE_CLANG__)
+endif()
 
 #=========================================================================================
 # Enable unit tests

@@ -1,8 +1,8 @@
 #ifndef PIXIE_CONCEPTS_VIRTUAL_END_H
 #define PIXIE_CONCEPTS_VIRTUAL_END_H
 
-#include "Core/PixieExports.h"
-#include "Utility/TypeTraits.h"
+#include "Pixie/Misc/PixieExports.h"
+#include "Pixie/Utility/TypeTraits.h"
 
 namespace pixie
 {
@@ -33,6 +33,7 @@ PIXIE_EXPORT inline void End(T& object)
 	object.self->End();
 }
 
+
 class VirtualEnd
 {
 public:
@@ -48,7 +49,6 @@ public:
 	virtual void End() = 0;
 
 protected:
-
     /**
      * Overloaded method that calls the End method of the object that implements it
      * @tparam T (Automatically deduced) Type of class that implements a End method
@@ -61,7 +61,6 @@ protected:
 		data.End();
 	}
 
-
     /**
      * Overloaded method that is invoked when the object of type T does not have a End method
      * but still is defined to comply with this concept
@@ -70,7 +69,7 @@ protected:
      */
 	template<class T, typename
 	std::enable_if_t<HasEnd<T> == 0> * = nullptr>
-	static inline void CallEnd(T& data)
+	static inline void CallEnd(T&)
 	{
 		// Do nothing.
 	}
